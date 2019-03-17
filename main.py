@@ -91,8 +91,10 @@ class kmeans:
             return sMeans
 
 def draw_graph(Sp, index, k):
-    # 16 x 15 image
-    reduced_dims = np.reshape(Sp[0], (16, 15))
+    # 16 x 15 image. Sp has k vectors, so we choose to only look at the first one. 
+    # num can be changed as long as: num <= k.
+    num = 0
+    reduced_dims = np.reshape(Sp[num], (16, 15))
     fig, ax = plt.subplots()
     ax.axis('off')
     ax.set_title("Input: %s\nK: %s" % (index, k))
