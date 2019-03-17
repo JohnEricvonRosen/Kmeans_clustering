@@ -6,16 +6,12 @@
 import numpy as np
 import random as rand
 import itertools
+from matplotlib import pyplot as plt
 
 class kmeans:
     # k = number of clusters
-    # tolerance = when to stop iterations
-    # max_iter = number of iterations max.
-    def __init__(self, k = 3, tolerance = 0.0001, max_iter = 500):
+    def __init__(self, k = 3):
         self.k = k
-        self.tolerance = tolerance
-        self.max_iter = max_iter
-        self.avg = 0.0
     
     # this is read and parse
     def readfile(self, filename, index):
@@ -52,7 +48,6 @@ class kmeans:
 
     #computes means for all sets S
     def compute(self):
-        iterations = 0
         min = 1000000.0
         while(True):
             sMeans = []
@@ -93,20 +88,32 @@ class kmeans:
             #set Sj = S'j
             for i in range(0, self.k):
                 self.S[i] = S[i]
-                iterations += 1
             return sMeans
+
+def draw_graph(Sp, index, k):
+    # 16 x 15 image
+    reduced_dims = np.reshape(Sp[0], (16, 15))
+    fig, ax = plt.subplots()
+    ax.axis('off')
+    ax.set_title("Input: %s\nK: %s" % (index, k))
+    im = ax.imshow(reduced_dims, aspect="auto", extent=[0, 16, 0, 15], cmap=plt.cm.binary)
+    plt.show()
 
 def main():
     index = int(input("Input int [0-9]:"))
-    k = int(input("Set K:"))
-    tolerance = 0.0001
-    max_iter = 500
-    a = kmeans(k,tolerance,max_iter)
+    k = int(input("Set K [>0]:"))
+    a = kmeans(k)
+
+    #Initialization
     a.readfile("DigitsBasicRoutines/mfeat-pix.txt", index)
     rand.shuffle(a.np_array)
     a.chunks()
+
+    # Repitions. codbook: sMeans array
     codebook = a.compute()
-    print(codebook)
+
+    #Visualize results
+    draw_graph(codebook, index, a.k)
 
 if __name__ == '__main__':
     main()
